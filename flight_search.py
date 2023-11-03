@@ -44,7 +44,7 @@ class FlightSearch:
             data = flight_response.json()['data'][0]
         except IndexError:
             print(f"No flights found to {destination_city_code}")
-            return None
+            return FlightData(price=None, origin_city=None, origin_airport=None, destination_city=None, destination_airport=None, out_date=None, return_date=None)
 
         flight_data = FlightData(
             price=data["price"],
@@ -53,8 +53,8 @@ class FlightSearch:
             destination_city=data["route"][0]["cityTo"],
             destination_airport=data["route"][0]["flyTo"],
             out_date=data["route"][0]["local_departure"].split("T")[0],
-            return_date=data["route"][1]["local_arrival"].split("T")[0]
+            return_date=data["route"][1]["local_departure"].split("T")[0]
         )
 
-        print(f"{flight_data.destination_city}: {flight_data.price} - {flight_data.out_date} - {flight_data.return_date}")
-        return flight_data.price
+        print(f"{flight_data.destination_city}: ${flight_data.price} - {flight_data.out_date} - {flight_data.return_date}")
+        return flight_data

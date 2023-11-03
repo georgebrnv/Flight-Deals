@@ -1,6 +1,7 @@
 from data_manager import DataManager
 from flight_search import FlightSearch
 from datetime import datetime, timedelta
+from notification_manager import NotificationManager
 
 ORIGIN_CITY_IATA = "CLT"
 
@@ -10,6 +11,7 @@ six_month_from_today = datetime.now() + timedelta(days=180)
 data = DataManager()
 flight_search = FlightSearch()
 sheet_data = data.get_destination_data()
+notification_manager = NotificationManager()
 
 if sheet_data[0]["iataCode"] == "code":
     data.fill_up_iata_codes()
@@ -21,5 +23,9 @@ for index, destination in enumerate(sheet_data):
         from_time=tomorrow,
         to_time=six_month_from_today
     )
-    if sheet_data[0]["lowestPrice"] == "price" or flight.price < destination["lowestPrice"]:
-        data.fill_up_lowest_price(flight, index)
+    if flight.price < destination["lowestPrice"]:
+        notification_manager.send_sms_notification(
+            message=f"Low price alert! Only ${flight.price} to fly from {flight.origin_city}-{flight.origin_airport} to "
+                    f"{flight.destination_city}-{flight.destination_airport}, from {flight.out_date} to {flight.return_date}."
+        )
+        data.fill_up_lowest_price(flight.price, index)
