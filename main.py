@@ -13,16 +13,23 @@ flight_search = FlightSearch()
 sheet_data = data.get_destination_data()
 notification_manager = NotificationManager()
 
-if sheet_data[0]["iataCode"] == "code":
-    data.fill_up_iata_codes()
+user_data = data.subscription()
 
 for index, destination in enumerate(sheet_data):
+    if sheet_data[index]["iataCode"] == "code":
+        data.fill_up_iata_codes()
+
     flight = flight_search.check_flights(
         origin_city_code=ORIGIN_CITY_IATA,
         destination_city_code=destination["iataCode"],
         from_time=tomorrow,
         to_time=six_month_from_today
     )
+
+    if flight is None:
+        print(f"Nothing found for {destination}")
+        continue
+
     if flight.price < destination["lowestPrice"]:
         notification_manager.send_sms_notification(
             message=f"Low price alert! Only ${flight.price} to fly from {flight.origin_city}-{flight.origin_airport} to "
