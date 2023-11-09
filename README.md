@@ -13,6 +13,7 @@ This code finds cheapest flights and store these data in Google Sheets Table.
 3. Use Sheety.co API, create you account and use your own API and Basic Authentication Header.
 4. Use Tequila.kiwi.com to find all data we need flight-wise, sign up and use your own API_KEY.
 5. In main.py set your own ORIGIN_CITY_IATA location code (where your trip starts from).
+6. In notification_manager.py use your own ACCOUNT_SID, AUTH_TOKEN, PHONE_FROM and PHONE_TO by signing up on TWILIO.COM
 
 ---
 PARAMETERS:
